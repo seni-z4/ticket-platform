@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,14 +34,22 @@ public class TicketsController {
 	
 	
 	@GetMapping("/menu")
-	public String Index(Model model) {
-
-		List<Ticket> ticket = ticketRepo.findAll();
-
-		model.addAttribute("ticket", ticketRepo.findAll());
-
+	public String index(Model model, 
+			@RequestParam(name = "title", required = false) String title) {
+		
+		List<Ticket> tickets = new ArrayList<>();
+		
+		if(title == null || title.isBlank()) {
+			tickets = ticketRepo.findAll();
+		} else {
+			tickets = ticketRepo.findByTitleOrderByIdDesc(title);
+		}
+		
+		model.addAttribute("list", tickets);
+		
 		return "/Tickets/index";
 	}
+	
 	
 	
 	
