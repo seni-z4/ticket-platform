@@ -6,4 +6,5 @@ import com.example.demo.model.Utenti;
 
 public interface UtentiRepository extends JpaRepository<Utenti, Integer> {
 
+	
 }

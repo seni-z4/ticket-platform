@@ -34,15 +34,15 @@ public class Ticket {
 	private String textArea;
 	
 	@ManyToOne
-	@JoinColumn(name = "utenti_id", nullable = false)
+	@JoinColumn(name = "utenti_id")
 	private Utenti utenti;
 	
 	@OneToOne
-	@JoinColumn(name = "status_id", nullable = false)
+	@JoinColumn(name = "status_id")
 	private Status status;
 	
 	@OneToOne
-	@JoinColumn(name = "categori_id", nullable = false)
+	@JoinColumn(name = "categori_id")
 	private Categori categori;
 
 
