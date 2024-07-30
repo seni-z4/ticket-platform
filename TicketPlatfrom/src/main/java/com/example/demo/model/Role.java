@@ -17,7 +17,8 @@ public class Role {
 	
 	@NotBlank(message = "role is important")
 	private String role;
-
+	
+	
 	public Integer getId() {
 		return id;
 	}

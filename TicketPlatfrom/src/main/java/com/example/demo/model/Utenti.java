@@ -5,10 +5,12 @@ import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -24,6 +26,9 @@ public class Utenti {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
+	@NotBlank(message = "username non puoi essere null")
+	private String username;
+	
 	@NotBlank(message = "email non puoi essere null")
 	private String email;
 	
@@ -31,12 +36,11 @@ public class Utenti {
 	private String password;
 	
 	@NotNull(message = "La data di prestito non può essere null")
-	@Column(name = "date of birth ", nullable = false)
+	@Column(name = "date of birth ")
 	private Date dateofbith;
 	
-	@OneToOne
-	@JoinColumn(name = "role_id", nullable = false)
-	private Role role;
+	@ManyToMany(fetch = FetchType.EAGER)
+	private List<Role> roles;
 
 	
 
@@ -72,13 +76,23 @@ public class Utenti {
 		this.dateofbith = dateofbith;
 	}
 
-	public Role getRole() {
-		return role;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setRole(Role role) {
-		this.role = role;
+	public void setUsername(String username) {
+		this.username = username;
 	}
+
+	public List<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<Role> roles) {
+		this.roles = roles;
+	}
+	
+	
 
 
 	
