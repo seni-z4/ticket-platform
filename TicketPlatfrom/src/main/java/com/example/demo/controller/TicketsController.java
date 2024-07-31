@@ -13,6 +13,8 @@ import com.example.demo.model.Ticket;
 import com.example.demo.model.Utenti;
 import com.example.demo.repository.TicketRepository;
 import com.example.demo.repository.UtentiRepository;
+import com.example.demo.services.TicketService;
+import com.example.demo.services.UtentiService;
 
 import jakarta.validation.Valid;
 
@@ -32,22 +34,37 @@ public class TicketsController {
 	@Autowired
 	private UtentiRepository utentiRepository;
 	
+	@Autowired
+	private UtentiService utentiService;
 	
-	@GetMapping("/menu")
-	public String index(Model model, 
-			@RequestParam(name = "title", required = false) String title) {
+	@Autowired
+	private TicketService ticketService;
+	
+	
+//	@GetMapping
+//	public String index(Model model, 
+//			@RequestParam(name = "title", required = false) String title) {
+//		
+//		List<Ticket> tickets = new ArrayList<>();
+//		
+//		if(title == null || title.isBlank()) {
+//			tickets = ticketRepo.findAll();
+//		} else {
+//			tickets = ticketRepo.findByTitleOrderByIdDesc(title);
+//		}
+//		
+//		model.addAttribute("list", tickets);
+//		
+//		
+//		
+//		return "/Tickets/index";
 		
-		List<Ticket> tickets = new ArrayList<>();
+		@GetMapping
+	    public String index(Model model) {
+	        List<Ticket> ticketList = ticketService.getAllTickets();
+	        model.addAttribute("list", ticketList);
+	        return "/Tickets/index";
 		
-		if(title == null || title.isBlank()) {
-			tickets = ticketRepo.findAll();
-		} else {
-			tickets = ticketRepo.findByTitleOrderByIdDesc(title);
-		}
-		
-		model.addAttribute("list", tickets);
-		
-		return "/Tickets/index";
 	}
 	
 	
@@ -72,7 +89,15 @@ public class TicketsController {
 		
 		ticketRepo.save(tickets);
 		
-		return "redirect:/ticket/menu";
+		return "redirect:/ticket";
 	}
+	
+
+    @GetMapping("/users")
+    public String getUsers(Model model) {
+        List<Utenti> utentiList = utentiService.getAllUsers();
+        model.addAttribute("utentiList", utentiList);
+        return "/Tickets/user"; // This should match the name of your Thymeleaf template (users.html)
+    }
 	
 }

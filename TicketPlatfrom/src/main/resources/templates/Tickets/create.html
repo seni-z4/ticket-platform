@@ -47,11 +47,20 @@
 					</li>
 				</ul>
 			</div>
+			
+			<label for="utenti" name="utenti"> utenti </label>
+						<input type="text" class="form-control" id="utenti" th:field="*{utenti}" th:errorClass="is-invalid">
+						<div th:if="${#fields.hasErrors('utenti')}" class="invalid-feedback">
+							<ul>
+								<li th:each="err : ${#fields.errors('utenti')}" th:text="${err}">
+								</li>
+							</ul>
+						</div>
 
 			<div>
 				<button class="btn btn-primary mt-4" type="submit">submitform</button>
 
-				<a class="btn btn-primary mt-4" th:href="@{/ticket/menu}"> Torna alla lista </a>
+				<a class="btn btn-primary mt-4" th:href="@{/ticket}"> Torna alla lista </a>
 			</div>
 		</form>
 	</div>

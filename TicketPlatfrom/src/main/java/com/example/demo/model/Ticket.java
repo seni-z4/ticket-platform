@@ -21,6 +21,7 @@ import jakarta.validation.constraints.NotNull;
 @Table(name = "Ticket")
 public class Ticket {
 
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
