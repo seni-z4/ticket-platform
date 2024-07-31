@@ -47,15 +47,28 @@
 					</li>
 				</ul>
 			</div>
-			
-			<label for="utenti" name="utenti"> utenti </label>
-						<input type="text" class="form-control" id="utenti" th:field="*{utenti}" th:errorClass="is-invalid">
-						<div th:if="${#fields.hasErrors('utenti')}" class="invalid-feedback">
-							<ul>
-								<li th:each="err : ${#fields.errors('utenti')}" th:text="${err}">
-								</li>
-							</ul>
-						</div>
+
+			<!--			<label for="utenti" name="utenti"> utenti </label>
+								<input type="text" class="form-control" id="utenti" th:field="*{utenti}" th:errorClass="is-invalid">
+								<div th:if="${#fields.hasErrors('utenti')}" class="invalid-feedback">
+									<ul>
+										<li th:each="err : ${#fields.errors('utenti')}" th:text="${err}">
+										</li>
+									</ul>
+								</div> -->
+
+			<label for="utenti" name="utenti">Utenti</label>
+			<select class="form-control" id="utenti" th:field="*{utenti}" th:errorClass="is-invalid">
+				<option th:each="user : ${users}" th:value="${user.id}" th:text="${user.username}">Select a user</option>
+			</select>
+			<div th:if="${#fields.hasErrors('utenti')}" class="invalid-feedback">
+				<ul>
+					<li th:each="err : ${#fields.errors('utenti')}" th:text="${err}"></li>
+				</ul>
+			</div>
+
+
+
 
 			<div>
 				<button class="btn btn-primary mt-4" type="submit">submitform</button>

@@ -20,6 +20,7 @@ import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -74,6 +75,7 @@ public class TicketsController {
 	public String create(Model model) {
 		
 		model.addAttribute("ticket", new Ticket());
+		model.addAttribute("users", utentiRepository.findAll());
 		
 		return "/Tickets/create";
 
@@ -92,12 +94,23 @@ public class TicketsController {
 		return "redirect:/ticket";
 	}
 	
+	
+	@GetMapping("/show/{id}")
+	public String show(@PathVariable("id") Integer idticket, Model model) {
+		
+		model.addAttribute("Ticket" , ticketRepo.getReferenceById(idticket));
+		
+		return "/Tickets/show";
+	}
+	
+	
+	
 
     @GetMapping("/users")
     public String getUsers(Model model) {
         List<Utenti> utentiList = utentiService.getAllUsers();
         model.addAttribute("utentiList", utentiList);
-        return "/Tickets/user"; // This should match the name of your Thymeleaf template (users.html)
+        return "/Tickets/user";
     }
 	
 }
