@@ -10,11 +10,21 @@ import com.example.demo.repository.TicketRepository;
 
 @Service
 public class TicketService {
+	
 
-	@Autowired
-	private TicketRepository ticketRepository;
+    @Autowired
+    private TicketRepository ticketRepo;
 
-	public List<Ticket> getAllTickets() {
-		return ticketRepository.findAll();
-	}
+    public List<Ticket> getAllTickets() {
+        return ticketRepo.findAll();
+    }
+
+    public List<Ticket> filterTickets(String title) {
+        if (title != null && !title.isEmpty()) {
+            return ticketRepo.findByTitle(title);
+        } else {
+            return ticketRepo.findAll();
+        }
+    }
 }
+

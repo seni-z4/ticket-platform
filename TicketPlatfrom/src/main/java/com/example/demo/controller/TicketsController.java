@@ -41,7 +41,7 @@ public class TicketsController {
 	@Autowired
 	private TicketService ticketService;
 	
-	
+//	
 //	@GetMapping
 //	public String index(Model model, 
 //			@RequestParam(name = "title", required = false) String title) {
@@ -50,7 +50,8 @@ public class TicketsController {
 //		
 //		if(title == null || title.isBlank()) {
 //			tickets = ticketRepo.findAll();
-//		} else {
+//		} 
+//			else {
 //			tickets = ticketRepo.findByTitleOrderByIdDesc(title);
 //		}
 //		
@@ -59,18 +60,60 @@ public class TicketsController {
 //		
 //		
 //		return "/Tickets/index";
-		
-		@GetMapping
-	    public String index(Model model) {
-	        List<Ticket> ticketList = ticketService.getAllTickets();
+//	}
+//		
+//		@GetMapping
+//	    public String index(Model model) {
+//		
+//			
+////			List<Ticket> listicket = ticketService.findbyTitle();
+////			model.addAttribute("listicket" ,listicket);
+//	       
+//			
+//	        List<Ticket> ticketList = ticketService.getAllTickets();
+//	        model.addAttribute("list", ticketList);
+//	        return "/Tickets/index";
+//		
+//	}
+	
+	 @GetMapping
+	    public String index(
+	            @RequestParam(value = "title", required = false) String title,
+	            Model model) {
+
+	        List<Ticket> ticketList = ticketService.filterTickets(title);
 	        model.addAttribute("list", ticketList);
 	        return "/Tickets/index";
+	    }
+	
+//	@GetMapping
+//    public String index(Model model) {
+//        List<Ticket> ticketList = ticketService.getAllTickets();
+//        model.addAttribute("list", ticketList);
+//        return "/Tickets/index";
+//	
+//}
+//	
+	
+	
+//	@RequestMapping("/")
+//    public String viewHomePage(Model model, @RequestParam(value = "keyword", required = false) String keyword) {
+//		
+////	    System.out.println("Received keyword: " + keyword); // Debug statement
+////	    List<Ticket> listTickets = ticketService.listAll(keyword);
+////	    model.addAttribute("listticket", listTickets);
+////	    model.addAttribute("keyword", keyword);
+//	    model.addAttribute("ticket", new Ticket()); // Add this for the form binding
+//	    return "Tickets/index";
+//	}
+	
+	
+//    @GetMapping
+//    public List<Ticket> findByTitle(@RequestParam String title) {  	
+//        return ticketRepo.findByTitle(title);	
+//    }
+
 		
-	}
-	
-	
-	
-	
 	@GetMapping("/create")
 	public String create(Model model) {
 		
@@ -94,15 +137,15 @@ public class TicketsController {
 		return "redirect:/ticket";
 	}
 	
-	
-	@GetMapping("/show/{id}")
-	public String show(@PathVariable("id") Integer idticket, Model model) {
-		
-		model.addAttribute("Ticket" , ticketRepo.getReferenceById(idticket));
-		
-		return "/Tickets/show";
-	}
-	
+//	
+//	@GetMapping("/show/{id}")
+//	public String show(@PathVariable("id") Integer idticket, Model model) {
+//		
+//		model.addAttribute("Ticket" , ticketRepo.getReferenceById(idticket));
+//		
+//		return "/Tickets/show";
+//	}
+//	
 	
 	
 
@@ -112,5 +155,6 @@ public class TicketsController {
         model.addAttribute("utentiList", utentiList);
         return "/Tickets/user";
     }
+    
 	
 }
