@@ -3,12 +3,19 @@ package com.example.demo.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+//import org.hibernate.query.Page;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.support.MutableSortDefinition;
+import org.springframework.beans.support.PagedListHolder;
+import org.springframework.beans.support.PropertyComparator;
+//import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.jaxb.SpringDataJaxb.PageRequestDto;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.example.demo.model.APIResponse;
 import com.example.demo.model.Ticket;
 import com.example.demo.model.Utenti;
 import com.example.demo.repository.TicketRepository;
@@ -22,7 +29,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+
 
 
 @Controller
@@ -76,14 +88,46 @@ public class TicketsController {
 //		
 //	}
 	
-	 @GetMapping
-	    public String index(
-	            @RequestParam(value = "title", required = false) String title,
-	            Model model) {
+	@GetMapping
+    public String index(
+        @RequestParam(value = "title", required = false) String title,
+        @RequestParam(value = "page", defaultValue = "0") int page,
+        @RequestParam(value = "size", defaultValue = "10") int size,
+        Model model) {
 
-	        List<Ticket> ticketList = ticketService.filterTickets(title);
-	        model.addAttribute("list", ticketList);
-	        return "/Tickets/index";
+        // Create pageable instance
+        Pageable pageable = PageRequest.of(page, size);
+        
+        // Get paginated tickets
+        Page<Ticket> ticketPage;
+        if (title != null && !title.isEmpty()) {
+            ticketPage = ticketService.filterTickets(title, pageable);
+        } else {
+            ticketPage = ticketService.getTickets(pageable);
+        }
+
+        // Add pagination details to the model
+        model.addAttribute("ticketPage", ticketPage);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", ticketPage.getTotalPages());
+        model.addAttribute("title", title); // for preserving the filter criteria
+
+        return "/Tickets/index";
+    }
+	
+////	 @GetMapping
+////	    public String index(
+////	            @RequestParam(value = "title", required = false) String title, Model model) {
+////
+////	        List<Ticket> ticketList = ticketService.filterTickets(title);
+////	        model.addAttribute("list", ticketList);
+////	        return "/Tickets/index";
+////	    }
+//	
+	 @GetMapping("/pagination/{offset}/{pageSize}")
+	    private APIResponse<Page<Ticket>> getTicketsWithSort(@PathVariable int offset, @PathVariable int pageSize) {
+	        Page<Ticket> ticketsWithPagination = ticketService.findTicketWithPagination(offset, pageSize);
+	        return new APIResponse<>(ticketsWithPagination.getSize(), ticketsWithPagination);
 	    }
 	
 //	@GetMapping

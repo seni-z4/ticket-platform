@@ -2,78 +2,104 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 
 <head>
-
-	<!-- Required meta tags -->
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Create Ticket</title>
 
 	<!-- Bootstrap CSS -->
 	<link th:rel="stylesheet" th:href="@{/webjars/bootstrap/5.1.3/css/bootstrap.min.css}" />
-
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-	<title>CREATE</title>
+	<style>
+		body {
+			background-color: #f4f5f7;
+		}
+
+		.container {
+			background: #ffffff;
+			border-radius: 8px;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+			padding: 30px;
+			margin-top: 50px;
+		}
+
+		h1 {
+			color: #343a40;
+			margin-bottom: 30px;
+		}
+
+		label {
+			font-weight: bold;
+			margin-top: 10px;
+			color: #495057;
+		}
+
+		.btn-primary {
+			background-color: #007bff;
+			border-color: #007bff;
+		}
+
+		.btn-primary:hover {
+			background-color: #0056b3;
+			border-color: #004085;
+		}
+
+		.invalid-feedback {
+			font-size: 0.875em;
+		}
+	</style>
 </head>
 
 <body>
-	<h1 class="fs-2">create a new ticket </h1>
-
 	<div class="container">
+		<h1 class="fs-3 text-center">Create a New Ticket</h1>
+
 		<form id="ticket-form" th:object="${ticket}" th:action="@{/ticket/create}" method="post">
-
-			<label for="dueDate" name="dueDate"> duedate</label>
-			<input type="date" class="form-control" id="dueDate" th:field="*{dueDate}" th:errorClass="is-invalid">
-			<div th:if="${#fields.hasErrors('dueDate')}" class="invalid-feedback">
-				<ul>
-					<li th:each="err : ${#fields.errors('dueDate')}" th:text="${err}">
-					</li>
-				</ul>
+			<div class="mb-3">
+				<label for="dueDate" name="dueDate">Due Date</label>
+				<input type="date" class="form-control" id="dueDate" th:field="*{dueDate}" th:errorClass="is-invalid">
+				<div th:if="${#fields.hasErrors('dueDate')}" class="invalid-feedback">
+					<ul>
+						<li th:each="err : ${#fields.errors('dueDate')}" th:text="${err}"></li>
+					</ul>
+				</div>
 			</div>
 
-			<label for="title" name="title">title </label>
-			<input type="text" class="form-control" id="title" th:field="*{title}" th:errorClass="is-invalid">
-			<div th:if="${#fields.hasErrors('title')}" class="invalid-feedback">
-				<ul>
-					<li th:each="err : ${#fields.errors('title')}" th:text="${err}">
-					</li>
-				</ul>
+			<div class="mb-3">
+				<label for="title" name="title">Title</label>
+				<input type="text" class="form-control" id="title" th:field="*{title}" th:errorClass="is-invalid">
+				<div th:if="${#fields.hasErrors('title')}" class="invalid-feedback">
+					<ul>
+						<li th:each="err : ${#fields.errors('title')}" th:text="${err}"></li>
+					</ul>
+				</div>
 			</div>
 
-			<label for="textArea" name="textArea"> textArea </label>
-			<input type="text" class="form-control" id="textArea" th:field="*{textArea}" th:errorClass="is-invalid">
-			<div th:if="${#fields.hasErrors('textArea')}" class="invalid-feedback">
-				<ul>
-					<li th:each="err : ${#fields.errors('textArea')}" th:text="${err}">
-					</li>
-				</ul>
+			<div class="mb-3">
+				<label for="textArea" name="textArea">Description</label>
+				<textarea class="form-control" id="textArea" th:field="*{textArea}" rows="4" th:errorClass="is-invalid"></textarea>
+				<div th:if="${#fields.hasErrors('textArea')}" class="invalid-feedback">
+					<ul>
+						<li th:each="err : ${#fields.errors('textArea')}" th:text="${err}"></li>
+					</ul>
+				</div>
 			</div>
 
-			<!--			<label for="utenti" name="utenti"> utenti </label>
-								<input type="text" class="form-control" id="utenti" th:field="*{utenti}" th:errorClass="is-invalid">
-								<div th:if="${#fields.hasErrors('utenti')}" class="invalid-feedback">
-									<ul>
-										<li th:each="err : ${#fields.errors('utenti')}" th:text="${err}">
-										</li>
-									</ul>
-								</div> -->
-
-			<label for="utenti" name="utenti">Utenti</label>
-			<select class="form-control" id="utenti" th:field="*{utenti}" th:errorClass="is-invalid">
-				<option th:each="user : ${users}" th:value="${user.id}" th:text="${user.username}">Select a user</option>
-			</select>
-			<div th:if="${#fields.hasErrors('utenti')}" class="invalid-feedback">
-				<ul>
-					<li th:each="err : ${#fields.errors('utenti')}" th:text="${err}"></li>
-				</ul>
+			<div class="mb-3">
+				<label for="utenti" name="utenti">Assign to User</label>
+				<select class="form-control" id="utenti" th:field="*{utenti}" th:errorClass="is-invalid">
+					<option th:each="user : ${users}" th:value="${user.id}" th:text="${user.username}">Select a user</option>
+				</select>
+				<div th:if="${#fields.hasErrors('utenti')}" class="invalid-feedback">
+					<ul>
+						<li th:each="err : ${#fields.errors('utenti')}" th:text="${err}"></li>
+					</ul>
+				</div>
 			</div>
 
-
-
-
-			<div>
-				<button class="btn btn-primary mt-4" type="submit">submitform</button>
-
-				<a class="btn btn-primary mt-4" th:href="@{/ticket}"> Torna alla lista </a>
+			<div class="d-flex justify-content-between mt-4">
+				<button class="btn btn-primary" type="submit">Submit Form</button>
+				<a class="btn btn-secondary" th:href="@{/ticket}">Back to List</a>
 			</div>
 		</form>
 	</div>

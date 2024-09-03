@@ -2,6 +2,8 @@ package com.example.demo.repository;
 
 import java.sql.Date;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -19,6 +21,9 @@ public interface TicketRepository extends JpaRepository<Ticket, Integer> {
     List<Ticket> findByTitleOrderByIdDesc(String title);
 
 
+    Page<Ticket> findByTitleContainingIgnoreCase(String title, Pageable pageable);
+
+    Page<Ticket> findAll(Pageable pageable);
 
     
 
