@@ -21,8 +21,12 @@ public class TicketService {
     return ticketRepository.findById(id).get();
   }
 
-  public List<Ticket> serachBookByTitle(String title) {
+  public List<Ticket> serachTicketByTitle(String title) {
     return ticketRepository.findByTitleContainingIgnoreCase(title);
+  }
+
+  public Ticket save(Ticket save) {
+    return ticketRepository.save(save);
   }
 
 }

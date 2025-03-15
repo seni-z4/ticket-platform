@@ -9,4 +9,5 @@ import ticket.it.ticket.model.Ticket;
 public interface TicketRepository extends JpaRepository<Ticket, Integer> {
 
   public List<Ticket> findByTitleContainingIgnoreCase(String title);
+
 }
