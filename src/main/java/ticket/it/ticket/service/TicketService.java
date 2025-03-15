@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import ticket.it.ticket.model.Ticket;
 import ticket.it.ticket.repository.TicketRepository;
 
@@ -17,4 +16,13 @@ public class TicketService {
   public List<Ticket> findAll() {
     return ticketRepository.findAll();
   }
+
+  public Ticket getById(Integer id) {
+    return ticketRepository.findById(id).get();
+  }
+
+  public List<Ticket> serachBookByTitle(String title) {
+    return ticketRepository.findByTitleContainingIgnoreCase(title);
+  }
+
 }

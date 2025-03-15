@@ -19,37 +19,23 @@
 
   <body>
     <h2 class="mt-4 mb-4 container">System Dashboard</h2>
-    <table class="table container" th:if="${tickets.size() > 0}">
+    <table class="table container" th:if="${users.size() > 0}">
       <thead>
         <tr>
           <th scope="col">id</th>
-          <th scope="col">title</th>
-          <th scope="col">description</th>
-          <th scope="col">created At</th>
-          <th scope="col">Updated At</th>
-          <th scope="col">Due Date</th>
-          <th scope="col"></th>
+          <th scope="col">nome</th>
+          <th scope="col">availability Status</th>
         </tr>
       </thead>
       <tbody>
-        <tr th:each="ticket : ${tickets}" th:object="${ticket}">
+        <tr th:each="user : ${users}" th:object="${user}">
           <td th:text="*{id}"></td>
-          <td th:text="*{title}"></td>
-          <td th:text="*{description}"></td>
-          <td th:text="*{createdAt}"></td>
-          <td th:text="*{updatedAt}"></td>
-          <td th:text="*{dueDate}"></td>
-          <td>
-            <a
-              th:href="@{/ticket/{id}(id=*{id})}"
-              class="btn btn-sm btn-primary"
-              >Show</a
-            >
-          </td>
+          <td th:text="*{name}"></td>
+          <td th:text="*{availabilityStatus}"></td>
         </tr>
       </tbody>
     </table>
-    <h3 class="alert alert-warning container" th:unless="${tickets.size() > 0}">
+    <h3 class="alert alert-warning container" th:unless="${users.size() > 0}">
       no filters found !!!
     </h3>
 

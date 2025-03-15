@@ -6,6 +6,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
@@ -36,6 +38,18 @@ public class Ticket {
 
   @NotNull(message = "Please add a description")
   private String description;
+
+  @ManyToOne
+  @JoinColumn(name = "user_id", nullable = false)
+  private User user;
+
+  public User getUser() {
+    return user;
+  }
+
+  public void setUser(User user) {
+    this.user = user;
+  }
 
   public Integer getId() {
     return id;
@@ -69,12 +83,12 @@ public class Ticket {
     this.dueDate = dueDate;
   }
 
-  public String getTextArea() {
+  public String getDescription() {
     return description;
   }
 
-  public void setTextArea(String textArea) {
-    this.description = textArea;
+  public void setDescription(String description) {
+    this.description = description;
   }
 
   public String getTitle() {
