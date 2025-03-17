@@ -20,7 +20,11 @@
   <body class="container" th:object="${ticket}">
     <h1 class="text-center mt-3 mb-3">Create a new ticket</h1>
 
-    <form th:action="@{/ticket/create}" th:object="${ticket}" method="post">
+    <form
+      th:if="${create} ? @{/ticket/create}: @{|/ticket/edit/${ticket.id}|}"
+      th:object="${ticket}"
+      method="post"
+    >
       <div class="mb-3">
         <label for="title" class="form-label">Title:</label>
         <input
@@ -41,7 +45,7 @@
           </ul>
         </div>
       </div>
-
+      <!-- 
       <div class="mb-3">
         <label for="createdAt" class="form-label">created At:</label>
         <input
@@ -61,9 +65,9 @@
             ></li>
           </ul>
         </div>
-      </div>
+      </div> -->
 
-      <div class="mb-3">
+      <!-- <div class="mb-3">
         <label for="updatedAt" class="form-label">updated At:</label>
         <input
           type="date"
@@ -82,7 +86,7 @@
             ></li>
           </ul>
         </div>
-      </div>
+      </div> -->
 
       <div class="mb-3">
         <label for="dueDate" class="form-label">Due Date:</label>
@@ -130,15 +134,17 @@
       </div>
 
       <div class="mb-3">
-        <label for="user" class="form-label">user:</label>
-        <input
-          type="number"
-          class="form-control"
-          id="user"
-          aria-describedby="user"
-          th:field="*{user}"
-          th:errorclass="is-invalid"
-        />
+        <label for="user" class="form-label"
+          >Assign an Available Operator:</label
+        >
+        <select class="form-control" id="user" th:field="*{user.id}">
+          <option value="">Select an Operator</option>
+          <option
+            th:each="user : ${users}"
+            th:value="${user.id}"
+            th:text="${user.name + ' ' + user.surname}"
+          ></option>
+        </select>
 
         <div th:if="${#fields.hasErrors('user')}" class="invalid-feedback">
           <ul>

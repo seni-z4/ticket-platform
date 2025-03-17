@@ -18,7 +18,7 @@
   <div th:replace="~{fragments/navbar :: header}"></div>
 
   <body>
-    <section class="container">
+    <section class="container" th:object="${user}">
       <h1 class="text-center mt-3 mb-3">Ticket: [[${ticket.title}]]</h1>
 
       <div class="card text-center">
@@ -29,7 +29,9 @@
             style="width: 50%; max-width: 500px"
           />
         </div>
-        <div class="card-header">Featured</div>
+        <div class="card-header">
+          <b>Assign To :</b> [[${user.name}]] [[${user.surname}]]
+        </div>
         <div class="card-body">
           <h5 class="card-title">[[${ticket.title}]]</h5>
           <p class="card-text">[[${ticket.description}]]</p>
@@ -38,9 +40,17 @@
           >
         </div>
         <div class="card-footer text-body-secondary">
-          <b>Created at -></b> [[${ticket.createdAt}]] ||
-          <b>Updated at -></b> [[${ticket.updatedAt}]] ||
-          <b>Due Date -></b> [[${ticket.dueDate}]]
+          <b>Created at →</b>
+          <span
+            th:text="${#temporals.format(ticket.createdAt, 'yyyy-MM-dd HH:mm')}"
+          ></span>
+          ||
+
+          <b>Updated at →</b>
+          <span
+            th:text="${#temporals.format(ticket.updatedAt, 'yyyy-MM-dd HH:mm')}"
+          ></span>
+          || <b>Due Date -></b> [[${ticket.dueDate}]]
         </div>
       </div>
     </section>

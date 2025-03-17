@@ -29,4 +29,7 @@ public class TicketService {
     return ticketRepository.save(save);
   }
 
+  public void delete(Ticket ticket) {
+    ticketRepository.delete(ticket);
+  }
 }

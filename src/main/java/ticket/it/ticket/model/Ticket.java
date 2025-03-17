@@ -1,7 +1,12 @@
 package ticket.it.ticket.model;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,13 +29,13 @@ public class Ticket {
   @NotNull(message = "The title cannot be null")
   private String title;
 
-  @NotNull(message = "Date cannot be null")
+  @CreationTimestamp
   @PastOrPresent(message = "The ticket cannot be created in the future")
-  private LocalDate createdAt;
+  @Column(updatable = false)
+  private LocalDateTime createdAt;
 
-  @NotNull(message = "The ticket cannot be updated in the future")
-  @PastOrPresent(message = "the ticket cann't we updated in the futher")
-  private LocalDate updatedAt;
+  @UpdateTimestamp
+  private LocalDateTime updatedAt;
 
   @NotNull(message = "date cann't be null")
   @FutureOrPresent(message = "The ticket cannot have a due date in the past")
@@ -59,19 +64,19 @@ public class Ticket {
     this.id = id;
   }
 
-  public LocalDate getCreatedAt() {
+  public LocalDateTime getCreatedAt() {
     return createdAt;
   }
 
-  public void setCreatedAt(LocalDate createdAt) {
+  public void setCreatedAt(LocalDateTime createdAt) {
     this.createdAt = createdAt;
   }
 
-  public LocalDate getUpdatedAt() {
+  public LocalDateTime getUpdatedAt() {
     return updatedAt;
   }
 
-  public void setUpdatedAt(LocalDate updatedAt) {
+  public void setUpdatedAt(LocalDateTime updatedAt) {
     this.updatedAt = updatedAt;
   }
 

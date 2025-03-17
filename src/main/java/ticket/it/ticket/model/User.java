@@ -37,10 +37,18 @@ public class User {
   private String email;
 
   @NotNull(message = "asign the status")
-  private Boolean availabilityStatus;
+  private boolean availabilityStatus = true;
 
   @OneToMany(mappedBy = "user")
   private List<Ticket> tickets;
+
+  public void updateAvailability() {
+    this.availabilityStatus = (this.tickets == null || this.tickets.isEmpty());
+  }
+
+  public boolean isAvailable() {
+    return availabilityStatus;
+  }
 
   public List<Ticket> getTickets() {
     return tickets;

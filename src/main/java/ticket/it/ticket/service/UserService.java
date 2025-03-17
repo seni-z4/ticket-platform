@@ -13,7 +13,7 @@ public class UserService {
   @Autowired
   private UserRepository userRepository;
 
-  public List<User> findAll() {
+  public List<User> getAllUsers() {
     return userRepository.findAll();
   }
 
@@ -21,8 +21,7 @@ public class UserService {
     return userRepository.findById(id).get();
   }
 
-  // public List<User> serachBookByTitle(String title) {
-  // return userRepository.findByTitleContainingIgnoreCase(title);
-  // }
-
+  public List<User> getAvailableUsers() {
+    return userRepository.findAvailableUsers();
+  }
 }
