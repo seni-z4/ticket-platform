@@ -13,6 +13,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
@@ -47,6 +48,10 @@ public class Ticket {
   @ManyToOne
   @JoinColumn(name = "user_id", nullable = false)
   private User user;
+
+  @ManyToOne
+  @JoinColumn(name = "status_id", unique = true, nullable = false)
+  private Status status;
 
   public User getUser() {
     return user;
@@ -104,10 +109,12 @@ public class Ticket {
     this.title = title;
   }
 
-  @Override
-  public String toString() {
-    return "Ticket [id=" + id + ", title=" + title + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt
-        + ", dueDate=" + dueDate + ", textArea=" + description + "]";
+  public Status getStatus() {
+    return status;
+  }
+
+  public void setStatus(Status status) {
+    this.status = status;
   }
 
 }

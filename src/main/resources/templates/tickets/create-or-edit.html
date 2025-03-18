@@ -45,6 +45,31 @@
           </ul>
         </div>
       </div>
+
+      <div class="mb-3">
+        <label for="status">Status:</label>
+        <select id="status" name="status" class="form-control">
+          <option value="">Select a status</option>
+          <option
+            th:each="st : ${statuses}"
+            th:value="${st.id}"
+            th:text="${st.status}"
+            th:selected="${ticket.status != null && st.id == ticket.status.id}"
+          >
+            > >
+          </option>
+        </select>
+
+        <div th:if="${#fields.hasErrors('status')}" class="invalid-feedback">
+          <ul>
+            <li
+              th:each="err : ${#fields.errors('status')}"
+              th:text="${err}"
+            ></li>
+          </ul>
+        </div>
+      </div>
+
       <!-- 
       <div class="mb-3">
         <label for="createdAt" class="form-label">created At:</label>

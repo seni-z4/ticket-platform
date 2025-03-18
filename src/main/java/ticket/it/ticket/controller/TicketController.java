@@ -1,6 +1,6 @@
 package ticket.it.ticket.controller;
 
-import java.time.LocalDate;
+import java.security.PrivateKey;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.validation.Valid;
+import ticket.it.ticket.model.Status;
 import ticket.it.ticket.model.Ticket;
 import ticket.it.ticket.model.User;
+import ticket.it.ticket.repository.StatusRepository;
 import ticket.it.ticket.repository.TicketRepository;
 import ticket.it.ticket.repository.UserRepository;
 import ticket.it.ticket.service.TicketService;
@@ -40,6 +42,9 @@ public class TicketController {
 
   @Autowired
   private UserRepository userRepository;
+
+  @Autowired
+  private StatusRepository statusRepository;
 
   // TicketController(TicketApplication ticketApplication) {
   // this.ticketApplication = ticketApplication;
@@ -81,16 +86,20 @@ public class TicketController {
     model.addAttribute("users", userService.getAvailableUsers());
     model.addAttribute("ticket", new Ticket());
     model.addAttribute("create", true);
+    model.addAttribute("statuses", statusRepository.findAll());
 
     return "tickets/create-or-edit";
   }
 
   @PostMapping("/create")
-  public String store(@Valid Ticket ticketForm, BindingResult bindingResult, Model model) {
+  public String store(@Valid Ticket ticketForm, @RequestParam("status") Integer statusId, BindingResult bindingResult,
+      Model model,
+      RedirectAttributes redirectAttributes) {
 
     if (bindingResult.hasErrors()) {
       model.addAttribute("create", true);
       model.addAttribute("users", userService.getAvailableUsers());
+      model.addAttribute("statuses", statusRepository.findAll());
 
       return "tickets/create-or-edit";
     }
@@ -98,11 +107,20 @@ public class TicketController {
     User assignedUser = userRepository.findById(ticketForm.getUser().getId())
         .orElseThrow(() -> new RuntimeException("User not found"));
 
+    Status status = statusRepository.findById(statusId).get();
+
+    ticketForm.setStatus(status);
+
     assignedUser.updateAvailability();
     ticketForm.setUser(assignedUser);
 
     ticketService.save(ticketForm);
     userRepository.save(assignedUser);
+
+    redirectAttributes.addFlashAttribute("message",
+        String.format("a new ticket %s has been created", ticketForm.getTitle()));
+
+    redirectAttributes.addFlashAttribute("messageClass", "alert-success");
 
     return "redirect:/ticket";
   }
@@ -119,15 +137,20 @@ public class TicketController {
 
     model.addAttribute("ticket", ticket);
     model.addAttribute("users", availabelUsers);
+    model.addAttribute("statuses", statusRepository.findAll());
+
     return "tickets/create-or-edit";
 
   }
 
   @PostMapping("/edit/{id}")
-  public String update(@Valid @ModelAttribute("ticket") Ticket ticket, BindingResult bindingResult, Model model) {
+  public String update(@Valid @ModelAttribute("ticket") Ticket ticket, @RequestParam("status") Integer statusId,
+      BindingResult bindingResult, Model model,
+      RedirectAttributes redirectAttributes) {
 
     if (bindingResult.hasErrors()) {
       model.addAttribute("users", userService.getAllUsers());
+      model.addAttribute("statuses", statusRepository.findAll());
       return "tickets/create-or-edit";
     }
 
@@ -136,7 +159,6 @@ public class TicketController {
     User newAssignedUser = userRepository.getReferenceById(ticket.getUser().getId());
 
     ticket.setUser(newAssignedUser);
-    ticketService.save(ticket);
 
     if (previousUser != null && !previousUser.equals(newAssignedUser)) {
       previousUser.updateAvailability();
@@ -146,11 +168,21 @@ public class TicketController {
     newAssignedUser.updateAvailability();
     userRepository.save(newAssignedUser);
 
+    Status status = statusRepository.findById(statusId).get();
+    ticket.setStatus(status);
+
+    ticketService.save(ticket);
+
+    redirectAttributes.addFlashAttribute("message",
+        String.format("ticket  %s has been updated", ticket.getTitle()));
+
+    redirectAttributes.addFlashAttribute("messageClass", "alert-primary");
+
     return "redirect:/ticket";
   }
 
   @PostMapping("/delete/{id}")
-  public String delete(@PathVariable Integer id, Model model) {
+  public String delete(@PathVariable Integer id, Model model, RedirectAttributes redirectAttributes) {
 
     Ticket ticket = ticketService.getById(id);
 
@@ -163,6 +195,11 @@ public class TicketController {
       assignedUser.updateAvailability();
       userRepository.save(assignedUser);
     }
+
+    redirectAttributes.addFlashAttribute("message",
+        String.format("ticket %s has been deleted", ticket.getTitle()));
+
+    redirectAttributes.addFlashAttribute("messageClass", "alert-danger");
 
     return "redirect:/ticket";
   }
