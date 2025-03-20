@@ -2,6 +2,7 @@ package ticket.it.ticket.model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -13,6 +14,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.FutureOrPresent;
@@ -49,9 +51,13 @@ public class Ticket {
   @JoinColumn(name = "user_id", nullable = false)
   private User user;
 
+  @NotNull(message = "status cannot be empty")
   @ManyToOne
   @JoinColumn(name = "status_id", unique = true, nullable = false)
   private Status status;
+
+  @OneToMany(mappedBy = "ticket")
+  private List<Note> notes;
 
   public User getUser() {
     return user;
@@ -115,6 +121,14 @@ public class Ticket {
 
   public void setStatus(Status status) {
     this.status = status;
+  }
+
+  public List<Note> getNotes() {
+    return notes;
+  }
+
+  public void setNotes(List<Note> notes) {
+    this.notes = notes;
   }
 
 }

@@ -1,6 +1,6 @@
 package ticket.it.ticket.controller;
 
-import java.security.PrivateKey;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,12 +16,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.validation.Valid;
+import ticket.it.ticket.model.Note;
 import ticket.it.ticket.model.Status;
 import ticket.it.ticket.model.Ticket;
 import ticket.it.ticket.model.User;
 import ticket.it.ticket.repository.StatusRepository;
 import ticket.it.ticket.repository.TicketRepository;
 import ticket.it.ticket.repository.UserRepository;
+import ticket.it.ticket.service.NoteService;
 import ticket.it.ticket.service.TicketService;
 import ticket.it.ticket.service.UserService;
 
@@ -46,6 +48,9 @@ public class TicketController {
   @Autowired
   private StatusRepository statusRepository;
 
+  @Autowired
+  private NoteService noteService;
+
   // TicketController(TicketApplication ticketApplication) {
   // this.ticketApplication = ticketApplication;
   // }
@@ -61,8 +66,12 @@ public class TicketController {
   public String show(@PathVariable Integer id, Model model) {
     Ticket ticket = ticketService.getById(id);
 
+    List<Note> notes = noteService.findNotesByTicket(ticket);
+
     model.addAttribute("ticket", ticket);
     model.addAttribute("user", ticket.getUser());
+    model.addAttribute("notes", notes);
+
     return "tickets/show";
   }
 
@@ -108,6 +117,14 @@ public class TicketController {
         .orElseThrow(() -> new RuntimeException("User not found"));
 
     Status status = statusRepository.findById(statusId).get();
+    // Optional<Status> optionalStatus = statusRepository.findById(statusId);
+    // Status status;
+
+    // if (optionalStatus.isPresent()) {
+    // status = optionalStatus.get();
+    // } else {
+    // throw new RuntimeException("Status not found!");
+    // }
 
     ticketForm.setStatus(status);
 
@@ -130,6 +147,7 @@ public class TicketController {
     Ticket ticket = ticketService.getById(id);
 
     List<User> availabelUsers = userService.getAvailableUsers();
+    List<Note> notes = noteService.findNotesByTicket(ticket);
 
     if (ticket.getUser() != null && !availabelUsers.contains(ticket.getUser())) {
       availabelUsers.add(ticket.getUser());
@@ -138,6 +156,7 @@ public class TicketController {
     model.addAttribute("ticket", ticket);
     model.addAttribute("users", availabelUsers);
     model.addAttribute("statuses", statusRepository.findAll());
+    model.addAttribute("note", new Note());
 
     return "tickets/create-or-edit";
 
@@ -204,4 +223,18 @@ public class TicketController {
     return "redirect:/ticket";
   }
 
+  @GetMapping("/notes/{id}")
+  public String note(@PathVariable Integer id, Model model) {
+
+    Note note = new Note();
+
+    note.setTicket(ticketService.getById(id));
+    note.setCreateDate(LocalDateTime.now());
+
+    model.addAttribute("note", note);
+    model.addAttribute("create", true);
+
+    return "notes/create-or-edit";
+
+  }
 }

@@ -42,6 +42,7 @@
           <th scope="col"></th>
           <th scope="col"></th>
           <th scope="col"></th>
+          <th scope="col"></th>
         </tr>
       </thead>
       <tbody>
@@ -56,6 +57,14 @@
             th:text="${#temporals.format(ticket.updatedAt, 'yyyy-MM-dd HH:mm')}"
           ></td>
           <td th:text="*{dueDate}"></td>
+
+          <td>
+            <a
+              th:href="@{/notes/create/{id}(id=*{id})}"
+              class="btn btn-sm btn-outline-secondary"
+              >Notes</a
+            >
+          </td>
 
           <td>
             <a

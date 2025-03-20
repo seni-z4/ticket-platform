@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import ticket.it.ticket.model.Note;
 import ticket.it.ticket.model.Ticket;
 import ticket.it.ticket.repository.TicketRepository;
 
@@ -32,4 +34,5 @@ public class TicketService {
   public void delete(Ticket ticket) {
     ticketRepository.delete(ticket);
   }
+
 }
