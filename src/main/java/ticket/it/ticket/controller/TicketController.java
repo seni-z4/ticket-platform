@@ -1,9 +1,13 @@
 package ticket.it.ticket.controller;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,9 +17,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.validation.Valid;
+import ticket.it.ticket.model.Category;
 import ticket.it.ticket.model.Note;
 import ticket.it.ticket.model.Status;
 import ticket.it.ticket.model.Ticket;
@@ -23,6 +29,7 @@ import ticket.it.ticket.model.User;
 import ticket.it.ticket.repository.StatusRepository;
 import ticket.it.ticket.repository.TicketRepository;
 import ticket.it.ticket.repository.UserRepository;
+import ticket.it.ticket.service.CategoryService;
 import ticket.it.ticket.service.NoteService;
 import ticket.it.ticket.service.TicketService;
 import ticket.it.ticket.service.UserService;
@@ -50,6 +57,9 @@ public class TicketController {
 
   @Autowired
   private NoteService noteService;
+
+  @Autowired
+  private CategoryService categoryService;
 
   // TicketController(TicketApplication ticketApplication) {
   // this.ticketApplication = ticketApplication;
@@ -96,6 +106,7 @@ public class TicketController {
     model.addAttribute("ticket", new Ticket());
     model.addAttribute("create", true);
     model.addAttribute("statuses", statusRepository.findAll());
+    model.addAttribute("categories", categoryService.findAll());
 
     return "tickets/create-or-edit";
   }
@@ -157,6 +168,7 @@ public class TicketController {
     model.addAttribute("users", availabelUsers);
     model.addAttribute("statuses", statusRepository.findAll());
     model.addAttribute("note", new Note());
+    model.addAttribute("categories", categoryService.findAll());
 
     return "tickets/create-or-edit";
 
@@ -164,12 +176,15 @@ public class TicketController {
 
   @PostMapping("/edit/{id}")
   public String update(@Valid @ModelAttribute("ticket") Ticket ticket, @RequestParam("status") Integer statusId,
-      BindingResult bindingResult, Model model,
+      BindingResult bindingResult,
+      Model model,
       RedirectAttributes redirectAttributes) {
 
     if (bindingResult.hasErrors()) {
       model.addAttribute("users", userService.getAllUsers());
       model.addAttribute("statuses", statusRepository.findAll());
+      model.addAttribute("categories", categoryService.findAll());
+
       return "tickets/create-or-edit";
     }
 
@@ -190,7 +205,11 @@ public class TicketController {
     Status status = statusRepository.findById(statusId).get();
     ticket.setStatus(status);
 
-    ticketService.save(ticket);
+    existingTicket.setCategories(ticket.getCategories());
+
+    ticketService.save(existingTicket);
+
+    // ticketService.save(ticket);
 
     redirectAttributes.addFlashAttribute("message",
         String.format("ticket  %s has been updated", ticket.getTitle()));

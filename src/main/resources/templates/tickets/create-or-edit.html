@@ -46,6 +46,24 @@
         </div>
       </div>
 
+      <div class="mb-3 d-flex flex-wrap gap-3 mt-4 mb-4">
+        <label for="category">Select the Category :</label>
+        <div th:each="category : ${categories}" class="form-check">
+          <input
+            th:id="'category-'+${category.id}"
+            type="checkbox"
+            class="form-check-input"
+            th:field="*{categories}"
+            th:value="${category.id}"
+          />
+          <label
+            th:for="|category-${category.id}|"
+            class="form-check-label"
+            th:text="${category.name}"
+          ></label>
+        </div>
+      </div>
+
       <div class="mb-3">
         <label for="status">Status:</label>
         <select id="status" name="status" class="form-control">
