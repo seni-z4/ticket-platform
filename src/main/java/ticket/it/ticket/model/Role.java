@@ -3,6 +3,8 @@ package ticket.it.ticket.model;
 import java.util.List;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -24,6 +26,8 @@ public class Role {
   private String name;
 
   @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER)
+  @JsonManagedReference
+
   private Set<User> users;
 
   public Integer getId() {

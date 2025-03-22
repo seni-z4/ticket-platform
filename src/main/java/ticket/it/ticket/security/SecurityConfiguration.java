@@ -18,9 +18,10 @@ public class SecurityConfiguration {
     http
         .csrf().disable()
         .authorizeHttpRequests()
-        .requestMatchers("/ticket/create", "/ticket/edit/**").hasAuthority("ROLE_ADMIN") // ✅ FIXED
-        .requestMatchers(HttpMethod.POST, "/ticket/**").hasAuthority("ROLE_ADMIN") // ✅ FIXED
-        .requestMatchers("/ticket", "/ticket/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_USER") // ✅ FIXED
+        .requestMatchers("/ticket/create").hasAuthority("ROLE_ADMIN")
+        .requestMatchers("/ticket/edit/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
+        .requestMatchers(HttpMethod.POST, "/ticket/**").hasAuthority("ROLE_ADMIN")
+        .requestMatchers("/ticket", "/ticket/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
         .requestMatchers("/**").permitAll()
         .and()
         .formLogin()

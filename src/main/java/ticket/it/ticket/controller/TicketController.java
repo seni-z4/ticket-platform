@@ -4,9 +4,11 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
+// import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
+// import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import ticket.it.ticket.model.Category;
 import ticket.it.ticket.model.Note;
@@ -29,6 +32,7 @@ import ticket.it.ticket.model.User;
 import ticket.it.ticket.repository.StatusRepository;
 import ticket.it.ticket.repository.TicketRepository;
 import ticket.it.ticket.repository.UserRepository;
+import ticket.it.ticket.security.DatabaseUserDetails;
 import ticket.it.ticket.service.CategoryService;
 import ticket.it.ticket.service.NoteService;
 import ticket.it.ticket.service.TicketService;
@@ -67,8 +71,20 @@ public class TicketController {
 
   @GetMapping
   public String index(Model model) {
-    List<Ticket> tickets = ticketService.findAll();
-    model.addAttribute("tickets", tickets);
+
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    DatabaseUserDetails userDetails = (DatabaseUserDetails) auth.getPrincipal();
+
+    boolean isAdmin = userDetails.getAuthorities().stream()
+        .anyMatch(role -> role.getAuthority().equals("ROLE_ADMIN"));
+
+    if (isAdmin) {
+      model.addAttribute("tickets", ticketService.findAll());
+    } else {
+      Integer userId = userDetails.getId();
+      model.addAttribute("tickets", ticketService.findByUserId(userId));
+    }
+
     return "tickets/index";
   }
 
@@ -128,14 +144,6 @@ public class TicketController {
         .orElseThrow(() -> new RuntimeException("User not found"));
 
     Status status = statusRepository.findById(statusId).get();
-    // Optional<Status> optionalStatus = statusRepository.findById(statusId);
-    // Status status;
-
-    // if (optionalStatus.isPresent()) {
-    // status = optionalStatus.get();
-    // } else {
-    // throw new RuntimeException("Status not found!");
-    // }
 
     ticketForm.setStatus(status);
 
@@ -208,8 +216,6 @@ public class TicketController {
     existingTicket.setCategories(ticket.getCategories());
 
     ticketService.save(existingTicket);
-
-    // ticketService.save(ticket);
 
     redirectAttributes.addFlashAttribute("message",
         String.format("ticket  %s has been updated", ticket.getTitle()));

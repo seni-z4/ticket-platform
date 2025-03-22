@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -29,6 +31,7 @@ public class Note {
 
   @ManyToOne
   @JoinColumn(name = "ticket_id", nullable = false)
+  @JsonManagedReference
   private Ticket ticket;
 
   public Integer getId() {

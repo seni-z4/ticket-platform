@@ -7,6 +7,8 @@ import java.util.List;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -51,18 +53,22 @@ public class Ticket {
 
   @ManyToOne
   @JoinColumn(name = "user_id", nullable = false)
+  @JsonBackReference
   private User user;
 
   @NotNull(message = "status cannot be empty")
   @ManyToOne
   @JoinColumn(name = "status_id", unique = true, nullable = false)
+  @JsonBackReference
   private Status status;
 
   @OneToMany(mappedBy = "ticket")
+  @JsonBackReference
   private List<Note> notes;
 
   @ManyToMany
   @JoinTable(name = "category_ticket", joinColumns = @JoinColumn(name = "ticket_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
+  @JsonBackReference
   private List<Category> categories;
 
   public User getUser() {

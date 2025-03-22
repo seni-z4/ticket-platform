@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -60,10 +62,12 @@ public class User {
   }
 
   @OneToMany(mappedBy = "user")
+  @JsonManagedReference
   private List<Ticket> tickets;
 
   @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(name = "role_user", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+  @JsonManagedReference
   private Set<Role> roles;
 
   public void setAvailabilityStatus(boolean availabilityStatus) {

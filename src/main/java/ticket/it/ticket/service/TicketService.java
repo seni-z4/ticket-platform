@@ -35,4 +35,15 @@ public class TicketService {
     ticketRepository.delete(ticket);
   }
 
+  public List<Ticket> findByUserId(Integer id) {
+    return ticketRepository.findByUserId(id);
+  }
+
+  public List<Ticket> findByCategoryId(Integer categoryId) {
+    return ticketRepository.findByCategories_Id(categoryId);
+  }
+
+  public List<Ticket> findByStatus_Id(Integer statusId) {
+    return ticketRepository.findByStatus_Id(statusId);
+  }
 }

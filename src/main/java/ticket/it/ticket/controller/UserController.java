@@ -34,20 +34,4 @@ public class UserController {
     return "users/show";
   }
 
-  // @GetMapping("/search")
-  // public String filterByTitle(@RequestParam(name = "query") String query, Model
-  // model,
-  // RedirectAttributes redirectAttributes) {
-
-  // List<Ticket> tickets;
-
-  // if (query != null && !query.isEmpty()) {
-  // tickets = ticketService.serachBookByTitle(query);
-  // } else {
-  // tickets = ticketService.findAll();
-  // }
-  // model.addAttribute("tickets", tickets);
-  // return "tickets/index";
-  // }
-
 }

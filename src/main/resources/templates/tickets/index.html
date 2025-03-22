@@ -20,17 +20,20 @@
   <body class="bg-light">
     <h2 class="mt-4 mb-4 container">System Dashboard</h2>
 
-    <div class="d-flex justify-content-between align-items-center container">
+    <div
+      sec:authorize="hasRole('ROLE_ADMIN')"
+      class="d-flex justify-content-between align-items-center container"
+    >
       <a class="btn btn-primary mt-2 mb-4" th:href="@{/ticket/create}">
         Create a New Ticket
       </a>
       <div th:replace="~{fragments/serachbar :: searchbar}"></div>
     </div>
 
-    <!--flash message-->
     <th:block th:replace="~{fragments/flashMessage :: flashMessage}"></th:block>
+
     <table
-      class="table table-bordered table-striped table-hover container"
+      class="table table-bordered table-striped table-hover align-middle container"
       th:if="${tickets.size() > 0}"
     >
       <thead class="table-secondary">
@@ -38,12 +41,14 @@
           <th scope="col">id</th>
           <th scope="col">title</th>
           <th scope="col">description</th>
-          <th scope="col">created At</th>
+          <!-- <th scope="col">created At</th>
           <th scope="col">Updated At</th>
-          <th scope="col">Due Date</th>
+          <th scope="col">Due Date</th> -->
+          <th scope="col">Assigned Operator</th>
           <th scope="col"></th>
           <th scope="col"></th>
           <th scope="col"></th>
+
           <th scope="col"></th>
         </tr>
       </thead>
@@ -53,12 +58,15 @@
           <td th:text="*{title}"></td>
           <td th:text="*{description}"></td>
           <td
+            th:text="${ticket.user != null ? ticket.user.name + ' ' + ticket.user.surname : 'Unassigned'}"
+          ></td>
+          <!-- <td
             th:text="${#temporals.format(ticket.createdAt, 'yyyy-MM-dd HH:mm')}"
           ></td>
           <td
             th:text="${#temporals.format(ticket.updatedAt, 'yyyy-MM-dd HH:mm')}"
           ></td>
-          <td th:text="*{dueDate}"></td>
+          <td th:text="*{dueDate}"></td> -->
 
           <td>
             <a
@@ -82,38 +90,7 @@
               >Edit</a
             >
           </td>
-          <td>
-            <div class="modal" tabindex="-1">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title">Modal title</h5>
-                    <button
-                      type="button"
-                      class="btn-close"
-                      data-bs-dismiss="modal"
-                      aria-label="Close"
-                    ></button>
-                  </div>
-                  <div class="modal-body">
-                    <p>Modal body text goes here.</p>
-                  </div>
-                  <div class="modal-footer">
-                    <button
-                      type="button"
-                      class="btn btn-secondary"
-                      data-bs-dismiss="modal"
-                    >
-                      Close
-                    </button>
-                    <button type="button" class="btn btn-primary">
-                      Save changes
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- Button trigger modal -->
+          <td sec:authorize="hasRole('ROLE_ADMIN')">
             <button
               type="button"
               class="btn btn-sm btn-danger"
@@ -123,7 +100,6 @@
               delete
             </button>
 
-            <!-- Modal -->
             <div
               class="modal fade"
               th:id="'delete-model-'+ *{id}"

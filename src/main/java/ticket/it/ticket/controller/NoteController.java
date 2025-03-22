@@ -53,7 +53,6 @@ public class NoteController {
       BindingResult bindingResult,
       Model model) {
 
-    // Get the ticket
     Ticket ticket = ticketService.getById(ticketId);
     note.setTicket(ticket);
 
@@ -62,7 +61,6 @@ public class NoteController {
       return "notes/create-or-edit";
     }
 
-    // Save the note
     noteService.save(note);
 
     return "redirect:/ticket/" + ticketId;
@@ -85,7 +83,6 @@ public class NoteController {
       Model model) {
 
     if (bindingResult.hasErrors()) {
-      // model.addAttribute("note", noteService.getById(id));
       model.addAttribute("ticket", note.getTicket());
       return "notes/create-or-edit";
     }
@@ -102,9 +99,6 @@ public class NoteController {
 
   @PostMapping("/delete/{id}")
   public String delete(@PathVariable Integer id, Model model, RedirectAttributes redirectAttributes) {
-
-    // Ticket ticket = ticketService.getById(id);
-    // Note note = noteService.getById(id);
 
     noteService.deleteById(id);
 

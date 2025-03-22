@@ -3,6 +3,8 @@ package ticket.it.ticket.model;
 import java.util.List;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,6 +25,7 @@ public class Category {
   private String name;
 
   @ManyToMany(mappedBy = "categories")
+  @JsonManagedReference
   private List<Ticket> tickets;
 
   public Integer getId() {
